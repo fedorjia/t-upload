@@ -1,0 +1,35 @@
+{
+  "name": "t-upload",
+  "version": "1.0.0",
+  "description": "Upload Service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "upload"
+  ],
+  "author": "Fedor",
+  "license": "ISC",
+  "homepage": "",
+  "devDependencies": {
+    "cross-env": "^5.1.0"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "express-validator": "^4.2.1",
+    "formidable": "^1.0.17",
+    "gm": "^1.23.0",
+    "helmet": "^3.9.0",
+    "mkdirp": "^0.5.1",
+    "mongodb": "^2.2.33"
+  }
+}

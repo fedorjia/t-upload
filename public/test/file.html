@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <title>上传文件</title>
+    <link rel="stylesheet" href="css/fileupload.css">
+</head>
+<body>
+
+<div class="fileinput-button">
+    <span>Select file</span>
+    <input id="fileupload" type="file" name="file" multiple>
+</div>
+<div id="progress" class="progress">
+    <div class="progress-bar"></div>
+</div>
+<div id="files" class="files"></div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.ui.widget.js"></script>
+<script src="js/jquery.iframe-transport.js"></script>
+<script src="js/jquery.fileupload.js"></script>
+
+
+<script type="text/javascript">
+    /***********************************************************************
+     * configs
+     ***********************************************************************/
+	// fill your params
+	var domain = 'http://localhost:3001';
+	var appid = '59e6b71d5fbca4f8e605fef0';
+	var nonce = '1184e2f822aeacd8b3ae210a';
+	var sign = 'a9df0af2495b98d0fe1f3bed8e4b8077c4d8d590455fae9eae3a47a84677a174';
+	var time = 1508292676900;
+    /**
+     * 创建预上传DOM
+     **/
+    function createFileEl(data) {
+        var $file = $(document.createElement('div'));
+        $file.addClass('file-name');
+        $file.text(data.files[0].name);
+
+        var $button = $(document.createElement('div'));
+        $button.addClass('upload-button');
+        $button.text('Upload');
+
+        var $prefiles = $(document.createElement('div'));
+        $prefiles.addClass('prefiles');
+        $prefiles.append($file);
+        $prefiles.append($button);
+
+        $('body').append($prefiles);
+        return $prefiles;
+    }
+
+    /**
+     * 上传文件
+     */
+    function preupload(appid, nonce, sign, time) {
+        var $progressbar = $('#progress .progress-bar');
+        var $fileupload = $('#fileupload');
+        var url = domain + '/file?appid=' + appid
+            + '&nonce=' + nonce + '&time='+time+'&sign='+sign;
+
+        $fileupload.fileupload({
+            url: url,
+            dataType: 'json',
+            add: function (e, data) {
+                var $el = createFileEl(data);
+                var $button = $el.find('.upload-button');
+                data.context = $el;
+
+                $button.on('click', function () {
+                    $button.hide();
+                    data.submit();
+                });
+            },
+
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $progressbar.css({ 'width': progress + '%' });
+            },
+
+            done: function (e, resp) {
+                var result = resp.result;
+                console.log(result.body);
+                if(result.status === 200) {
+                    alert('上传成功:' + JSON.stringify(result.body));
+                } else {
+                    alert('上传失败:' + JSON.stringify(result.body));
+                }
+            }
+        });
+    }
+
+    // entry
+    $(function () {
+//        getsign(function(resp) {
+//            if(!resp.success) {
+//                alert(resp.result.message);
+//                return;
+//            }
+//            var time = resp.result.time;
+//            var sign = resp.result.sign;
+//            var nonce = resp.result.nonce;
+//            var appid = resp.result.appid;
+//
+//            preupload(appid, nonce, sign, time);
+//        });
+
+		preupload(appid, nonce, sign, time);
+
+    });
+</script>
+</body>
+</html>
